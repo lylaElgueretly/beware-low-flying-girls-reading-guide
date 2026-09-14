@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beware Low-Flying Girls — Reading at Three Levels</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#e6eef1;
+  --surface:#fbfaf7;
+  --surface-alt:#e9eef0;
+  --ink:#233240;
+  --ink-soft:#5b6b76;
+  --ink-faint:#8a97a0;
+  --rose-deep:#5f87a3;
+  --sage-deep:#5c7a58;
+  --gold:#cbae72;
+  --gold-deep:#a98a4c;
+  --lavender:#6f8fae;
+  --lavender-deep:#3f6284;
+  --border:#d3dde0;
+  --ok:#5f8a5a;
+  --bad:#b15b57;
+  --radius:14px;
+  --shadow:0 1px 2px rgba(35,50,64,0.06), 0 6px 18px rgba(35,50,64,0.08);
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Inter',sans-serif;
+  font-size:16px;
+  line-height:1.55;
+}
+h1,h2,h3,h4{
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  color:var(--ink);
+  margin:0 0 0.4em;
+}
+p{margin:0 0 0.9em;}
+.app{max-width:1180px;margin:0 auto;padding:22px 18px 60px;}
+
+/* ---------- HEADER ---------- */
+.masthead{
+  display:flex;
+  align-items:center;
+  gap:22px;
+  background:linear-gradient(135deg,var(--lavender) 0%, var(--rose-deep) 100%);
+  color:#fbf9f6;
+  border-radius:18px;
+  padding:26px 28px;
+  box-shadow:var(--shadow);
+}
+.masthead svg{flex:0 0 auto;width:64px;height:64px;}
+.masthead h1{color:#fff;font-size:1.7rem;margin-bottom:4px;}
+.masthead p{color:#eaf1f5;margin:0;font-size:0.98rem;max-width:640px;}
+
+/* ---------- OBJECTIVE BANNER ---------- */
+.objective-banner{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-left:5px solid var(--sage-deep);
+  border-radius:var(--radius);
+  padding:14px 20px;
+  margin-top:16px;
+  font-size:0.98rem;
+}
+.objective-banner strong{color:var(--sage-deep);}
+
+/* ---------- LAYOUT ---------- */
+.layout{display:grid;grid-template-columns:250px 1fr;gap:22px;margin-top:22px;align-items:start;}
+@media(max-width:880px){.layout{grid-template-columns:1fr;}}
+
+.rail{position:sticky;top:16px;display:flex;flex-direction:column;gap:16px;}
+@media(max-width:880px){.rail{position:static;flex-direction:row;overflow-x:auto;gap:12px;padding-bottom:4px;}}
+
+.level-group{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px;box-shadow:var(--shadow);}
+@media(max-width:880px){.level-group{min-width:220px;flex:0 0 auto;}}
+
+.level-label{font-family:'Fraunces',serif;font-size:0.78rem;letter-spacing:0.02em;color:var(--ink-faint);margin:2px 0 8px 4px;}
+.level-label .lvl-word{color:inherit;font-style:italic;}
+.tab-btn{
+  display:flex;align-items:center;gap:9px;width:100%;text-align:left;border:none;background:transparent;
+  padding:9px 10px;border-radius:9px;font-family:'Inter',sans-serif;font-size:0.93rem;font-weight:500;
+  color:var(--ink-soft);cursor:pointer;margin-bottom:2px;
+}
+.tab-btn:hover{background:var(--surface-alt);}
+.tab-btn.active{background:var(--lavender);color:#fff;}
+.tab-dot{width:8px;height:8px;border-radius:50%;background:var(--ink-faint);flex:0 0 auto;}
+.tab-btn.active .tab-dot{background:#fff;}
+.level-group[data-lvl="text"] .tab-btn.active{background:var(--rose-deep);}
+.level-group[data-lvl="word"] .tab-btn.active{background:var(--gold-deep);}
+
+/* ---------- PANELS ---------- */
+main{min-width:0;}
+.panel{display:none;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px 26px;box-shadow:var(--shadow);}
+.panel.active{display:block;}
+.panel-head{margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:14px;}
+.panel-head h2{font-size:1.4rem;}
+.panel-head .kicker{font-size:0.82rem;color:var(--ink-faint);font-style:italic;}
+.instructions{background:var(--surface-alt);border-radius:10px;padding:12px 16px;font-size:0.92rem;color:var(--ink-soft);margin-bottom:18px;}
+.instructions strong{color:var(--ink);}
+
+/* ---------- KEY WORDS (organised glossary) ---------- */
+.keywords-box{background:var(--surface-alt);border-radius:10px;padding:16px 18px;margin-bottom:18px;}
+.keywords-box > h4{font-size:0.9rem;color:var(--lavender-deep);margin-bottom:12px;}
+.kw-group{margin-bottom:14px;}
+.kw-group:last-child{margin-bottom:0;}
+.kw-group-title{font-size:0.72rem;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:6px;}
+.kw-list{margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:8px 18px;}
+.kw-term{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;}
+.kw-term dt{font-weight:700;font-size:0.88rem;color:var(--ink);font-family:'Fraunces',serif;}
+.kw-term dd{margin:2px 0 0;font-size:0.84rem;color:var(--ink-soft);}
+
+/* ---------- AUDIO ---------- */
+.audio-bar{background:var(--surface-alt);border-radius:10px;padding:12px 14px;margin-bottom:18px;font-size:0.88rem;color:var(--ink-soft);}
+.audio-row{display:flex;align-items:center;gap:10px;}
+.audio-row + .audio-row{margin-top:8px;}
+.audio-bar .btn{background:var(--sage-deep);}
+.audio-bar .btn:disabled{background:var(--ink-faint);cursor:not-allowed;opacity:0.6;}
+.audio-icon-btn{padding:8px 12px;font-size:0.8rem;}
+.audio-seek-row{gap:10px;}
+#audio-seek{flex:1;accent-color:var(--sage-deep);cursor:pointer;}
+#audio-seek:disabled{cursor:not-allowed;opacity:0.5;}
+.audio-time{font-variant-numeric:tabular-nums;font-size:0.8rem;color:var(--ink-faint);min-width:38px;text-align:center;}
+
+/* ---------- EXTRACT ---------- */
+.extract{font-family:'Fraunces',serif;font-size:1.04rem;line-height:1.75;color:var(--ink);max-width:74ch;}
+.extract .byline{text-align:right;font-style:italic;color:var(--ink-soft);margin-top:16px;}
+.extract p{margin-bottom:1em;}
+.dropcap:first-letter{font-family:'Fraunces',serif;font-size:3.1em;font-weight:700;float:left;line-height:0.85;padding-right:8px;padding-top:4px;color:var(--rose-deep);}
+.illustration-wrap{max-width:420px;margin:0 auto 8px;border-radius:14px;overflow:hidden;box-shadow:var(--shadow);}
+.illustration-wrap img{display:block;width:100%;height:auto;}
+.illustration-caption{text-align:center;font-size:0.8rem;color:var(--ink-faint);font-style:italic;margin-top:8px;margin-bottom:20px;}
+
+/* ---------- COMPREHENSION ---------- */
+.q-nav{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-bottom:16px;}
+.q-nav-label{font-family:'Fraunces',serif;font-weight:700;font-size:0.78rem;color:var(--ink-faint);margin:0 4px 0 10px;}
+.q-nav-label:first-child{margin-left:0;}
+.q-pill{border:1.5px solid var(--border);background:var(--surface-alt);color:var(--ink-soft);font-family:'Inter',sans-serif;font-weight:600;font-size:0.82rem;padding:6px 13px;border-radius:999px;cursor:pointer;flex:0 0 auto;}
+.q-pill:hover{border-color:var(--lavender);}
+.q-pill.active{background:var(--lavender);border-color:var(--lavender-deep);color:#fff;}
+.q-pill.active.grp-B{background:var(--rose-deep);border-color:var(--rose-deep);}
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.q-banner{padding:10px 18px;font-size:0.8rem;font-weight:600;background:var(--lavender);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;}
+.q-banner.grp-B{background:var(--rose-deep);}
+.q-badge{display:inline-block;padding:3px 11px;border-radius:999px;font-size:0.72rem;font-weight:700;background:rgba(255,255,255,0.25);color:#fff;}
+.q-tabs2{display:flex;border-bottom:1px solid var(--border);}
+.q-tab2{flex:1;padding:10px 14px;font-size:0.86rem;cursor:pointer;color:var(--ink-soft);background:var(--surface-alt);border:none;border-bottom:2px solid transparent;text-align:center;font-family:'Inter',sans-serif;font-weight:500;}
+.q-tab2:first-child{border-right:1px solid var(--border);}
+.q-tab2.active{background:var(--surface);color:var(--ink);font-weight:700;border-bottom:2px solid var(--lavender);}
+.q-body{padding:18px 20px;}
+.q-sublabel{font-size:0.72rem;font-weight:700;letter-spacing:0.03em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:6px;}
+.q-divider{height:1px;background:var(--border);margin:16px 0;}
+.q-box{font-family:'Fraunces',serif;font-size:1.08rem;margin-bottom:6px;}
+.circle-word{border:2px solid var(--rose-deep);border-radius:999px;padding:1px 10px;font-weight:700;color:var(--rose-deep);}
+.underline-focus{border-bottom:3px solid var(--sage-deep);font-weight:600;}
+.excerpt-block{font-family:'Fraunces',serif;font-style:italic;background:var(--surface-alt);border-left:4px solid var(--gold-deep);padding:12px 16px;border-radius:0 6px 6px 0;color:var(--ink-soft);}
+.evidence-highlight{color:var(--ink);font-style:normal;font-weight:700;text-decoration:underline;text-decoration-color:var(--gold-deep);text-decoration-thickness:3px;text-underline-offset:3px;}
+.model-answer{background:var(--surface-alt);border-radius:8px;padding:14px 16px;}
+.model-answer .tag{display:inline-block;font-size:0.74rem;font-weight:700;background:var(--rose-deep);color:#fff;padding:2px 9px;border-radius:999px;margin-bottom:10px;letter-spacing:0.02em;}
+.model-answer .explain{color:var(--ink-soft);font-size:0.92rem;margin-top:8px;}
+
+/* ---------- MATCH GAMES ---------- */
+.match-game{display:grid;grid-template-columns:1fr 1fr;gap:28px;}
+@media(max-width:700px){.match-game{grid-template-columns:1fr;}}
+.match-col h4{font-size:0.85rem;color:var(--ink-faint);margin-bottom:8px;}
+.match-item{border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:8px;cursor:pointer;background:var(--surface-alt);font-size:0.94rem;transition:background .15s,border-color .15s;display:flex;align-items:center;}
+.match-badge{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;color:#fff;font-size:0.72rem;font-weight:700;margin-right:10px;flex:0 0 auto;}
+.match-item.picked{border-color:var(--lavender);background:#dbe6ee;}
+.match-item.correct{border-color:var(--ok);background:#e2ecdf;color:var(--ok);cursor:default;}
+.match-item.wrong-flash{border-color:var(--bad);background:#f3e0df;}
+.match-status{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:14px;font-size:0.9rem;color:var(--ink-soft);}
+.match-status .btn{margin-left:8px;}
+.match-status .btn:first-child{margin-left:0;}
+.btn{border:none;background:var(--lavender);color:#fff;padding:8px 16px;border-radius:8px;font-weight:600;font-size:0.86rem;cursor:pointer;font-family:'Inter',sans-serif;}
+.btn.secondary{background:transparent;border:1.5px solid var(--border);color:var(--ink-soft);}
+.btn:hover{opacity:0.92;}
+
+/* ---------- INGREDIENTS & RECIPE SORT ---------- */
+.noun-table{width:100%;border-collapse:collapse;}
+.noun-table td,.noun-table th{padding:8px 6px;border-bottom:1px solid var(--border);font-size:0.9rem;text-align:left;}
+.noun-table th{color:var(--ink-faint);font-weight:600;font-size:0.78rem;}
+.noun-word{font-family:'Fraunces',serif;font-weight:600;}
+.cat-btn-row{display:flex;gap:5px;flex-wrap:wrap;}
+.cat-btn{border:1.5px solid var(--border);background:var(--surface);padding:5px 10px;border-radius:7px;font-size:0.78rem;cursor:pointer;color:var(--ink-soft);}
+.cat-btn.chosen{background:var(--lavender);border-color:var(--lavender-deep);color:#fff;}
+.cat-btn.chosen.right{background:var(--ok);border-color:var(--ok);}
+.cat-btn.chosen.wrong{background:var(--bad);border-color:var(--bad);}
+.noun-feedback{font-size:0.8rem;color:var(--ink-faint);margin-top:3px;}
+
+/* ---------- STORY ORDER TIMELINE ---------- */
+.timeline{position:relative;padding-left:6px;margin-top:10px;}
+.timeline::before{content:"";position:absolute;left:17px;top:8px;bottom:8px;width:3px;background:linear-gradient(var(--rose-deep),var(--gold-deep),var(--sage-deep),var(--lavender-deep));border-radius:3px;}
+.tl-item{position:relative;padding:0 0 18px 46px;}
+.tl-item:last-child{padding-bottom:0;}
+.tl-dot{position:absolute;left:6px;top:2px;width:24px;height:24px;border-radius:50%;background:var(--surface);border:3px solid var(--lavender);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:700;font-size:0.76rem;color:var(--lavender-deep);}
+.tl-card{background:var(--surface-alt);border-radius:10px;padding:10px 14px;}
+.tl-card h4{font-size:0.94rem;margin:0;}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="masthead">
+    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 46 L20 22 L28 34 L38 14 L60 46 Z" fill="#fbf9f6" opacity="0.92"/>
+      <path d="M28 34 L33 26 L38 34 Z" fill="#5f87a3" opacity="0.6"/>
+      <path d="M42 20 q6 -6 12 -2 q-3 2 -3 5 q4 -1 6 3 q-5 1 -7 -1 q0 4 -4 5 q1 -5 -4 -10 Z" fill="#fbf9f6" opacity="0.9"/>
+    </svg>
+    <div>
+      <h1>Beware Low-Flying Girls: Reading at Three Levels</h1>
+      <p>The start of an adventure. Read the opening of Katherine Rundell's story, then try the activities.</p>
+    </div>
+  </header>
+
+  <div class="objective-banner">
+    <strong>Lesson objective:</strong> identify the features of an adventure story, unpack question prompts, and scan the text for explicit and implicit information.
+  </div>
+
+  <div class="layout">
+    <nav class="rail">
+      <div class="level-group" data-lvl="text">
+        <div class="level-label">Text <span class="lvl-word">level</span></div>
+        <button class="tab-btn active" data-panel="extract"><span class="tab-dot"></span>The extract</button>
+        <button class="tab-btn" data-panel="nouns"><span class="tab-dot"></span>Ingredients &amp; Recipe</button>
+        <button class="tab-btn" data-panel="order"><span class="tab-dot"></span>Story order</button>
+        <button class="tab-btn" data-panel="comprehension"><span class="tab-dot"></span>Comprehension</button>
+      </div>
+      <div class="level-group" data-lvl="word">
+        <div class="level-label">Word <span class="lvl-word">level</span></div>
+        <button class="tab-btn" data-panel="vocab"><span class="tab-dot"></span>Vocabulary in context</button>
+      </div>
+    </nav>
+
+    <main>
+
+      <!-- EXTRACT -->
+      <section class="panel active" id="panel-extract">
+        <div class="panel-head">
+          <h2>Beware Low-Flying Girls — the extract</h2>
+          <div class="kicker">Katherine Rundell · opening extract</div>
+        </div>
+
+        <div class="illustration-wrap">
+          <img src="beware-low-flying-girls-illustration.png" alt="A collage of illustrations showing Odile: her mountaintop home, her father's oversized coat, her grandfather with a seagull, and Odile running and flying in the snow.">
+        </div>
+        <p class="illustration-caption">Illustrations of Odile, her home, her grandfather, and her father's coat, from the extract.</p>
+
+        <div class="keywords-box">
+          <h4>Key words for this session</h4>
+          <div class="kw-group">
+            <div class="kw-group-title">Understanding the story</div>
+            <dl class="kw-list">
+              <div class="kw-term"><dt>genre</dt><dd>a type of story (for example, adventure, comedy, crime, science fiction)</dd></div>
+              <div class="kw-term"><dt>setting</dt><dd>where a story happens</dd></div>
+            </dl>
+          </div>
+          <div class="kw-group">
+            <div class="kw-group-title">Reading the text closely</div>
+            <dl class="kw-list">
+              <div class="kw-term"><dt>context</dt><dd>the words around a word, which can help you work out what it means</dd></div>
+              <div class="kw-term"><dt>explicit information</dt><dd>facts the writer tells you clearly, in the words on the page</dd></div>
+              <div class="kw-term"><dt>implicit information</dt><dd>an idea the writer doesn't say directly, but that you can work out from clues in the text</dd></div>
+              <div class="kw-term"><dt>narrative structure</dt><dd>the order that things happen in a story</dd></div>
+            </dl>
+          </div>
+          <div class="kw-group">
+            <div class="kw-group-title">Sharing your ideas</div>
+            <dl class="kw-list">
+              <div class="kw-term"><dt>predict</dt><dd>say what you think might happen next</dd></div>
+              <div class="kw-term"><dt>opinion</dt><dd>your own view about something, which does not have to match a fact</dd></div>
+            </dl>
+          </div>
+        </div>
+
+        <div class="audio-bar" id="audio-bar">
+          <div class="audio-row">
+            <button class="btn audio-icon-btn" id="audio-back" title="Back 10 seconds">⟲10</button>
+            <button class="btn" id="audio-toggle">▶ Read aloud</button>
+            <button class="btn audio-icon-btn" id="audio-fwd" title="Forward 10 seconds">10⟳</button>
+            <span id="audio-status">Audio not added yet</span>
+          </div>
+          <div class="audio-row audio-seek-row">
+            <span class="audio-time" id="audio-current">0:00</span>
+            <input type="range" id="audio-seek" min="0" max="100" value="0" step="0.1" disabled>
+            <span class="audio-time" id="audio-duration">0:00</span>
+          </div>
+          <audio id="extract-audio" preload="metadata"></audio>
+        </div>
+        <div class="extract" id="extract-text"></div>
+      </section>
+
+      <!-- INGREDIENTS & RECIPE SORT -->
+      <section class="panel" id="panel-nouns">
+        <div class="panel-head">
+          <h2>Ingredients &amp; Recipe</h2>
+          <div class="kicker">Sort each feature into Character, Setting, Situation or Ending</div>
+        </div>
+        <div class="instructions">Adventure stories all share the same kind of "ingredients", and follow a similar "recipe". Tap the box you think each feature belongs to. Then press <strong>Check answers</strong> to see how you did.</div>
+        <table class="noun-table" id="noun-table"></table>
+        <div style="margin-top:14px;"><button class="btn" id="noun-check">Check answers</button> <button class="btn secondary" id="noun-reset">Reset</button></div>
+      </section>
+
+      <!-- STORY ORDER -->
+      <section class="panel" id="panel-order">
+        <div class="panel-head">
+          <h2>Story order</h2>
+          <div class="kicker">Narrative structure: the order things happen in the extract</div>
+        </div>
+        <div class="instructions">A timeline shows the order things happen in a story. Here are the first four points from the extract.</div>
+        <div class="timeline">
+          <div class="tl-item"><div class="tl-dot">1</div><div class="tl-card"><h4>You are told Odile can fly.</h4></div></div>
+          <div class="tl-item"><div class="tl-dot">2</div><div class="tl-card"><h4>The strength of the wind is described.</h4></div></div>
+          <div class="tl-item"><div class="tl-dot">3</div><div class="tl-card"><h4>Her father's coat is described.</h4></div></div>
+          <div class="tl-item"><div class="tl-dot">4</div><div class="tl-card"><h4>You find out that Odile's grandfather and Odile live alone.</h4></div></div>
+        </div>
+        <div class="instructions" style="margin-top:18px;"><strong>Now you try:</strong> what do you think the last two points are? Have a go, then press the button to check your ideas.</div>
+        <button class="btn" id="order-reveal">Show the last two points</button>
+        <div class="timeline" id="order-answer" style="display:none;margin-top:16px;">
+          <div class="tl-item"><div class="tl-dot">5</div><div class="tl-card"><h4>The wind catches her coat and she flies briefly.</h4></div></div>
+          <div class="tl-item"><div class="tl-dot">6</div><div class="tl-card"><h4>She tries again and really flies.</h4></div></div>
+        </div>
+      </section>
+
+      <!-- COMPREHENSION -->
+      <section class="panel" id="panel-comprehension">
+        <div class="panel-head">
+          <h2>Comprehension</h2>
+          <div class="kicker">Scan for explicit information, then work out implicit information</div>
+        </div>
+        <div class="instructions">Tap a question below. <strong>Question &amp; extract</strong> shows you the part of the text you need, without giving away the answer. <strong>Answer &amp; explanation</strong> unpacks the question for you (it shows what kind of answer to give, and exactly what the question is about), points to the exact words in the text that give the answer, and gives you a model answer.</div>
+        <div class="q-nav" id="q-nav"></div>
+        <div id="q-card-wrap"></div>
+      </section>
+
+      <!-- VOCAB IN CONTEXT -->
+      <section class="panel" id="panel-vocab">
+        <div class="panel-head">
+          <h2>Vocabulary in context</h2>
+          <div class="kicker">From the third paragraph of the extract</div>
+        </div>
+        <div class="instructions"><strong>First:</strong> read the third paragraph again and try to guess what each word means from the words around it. <strong>Then:</strong> tap a word, then tap the definition you think matches it.</div>
+        <div class="match-status">
+          <span id="vocab-score">Matched: 0 / 4</span>
+          <span>
+            <button class="btn secondary" id="vocab-reveal">Reveal answers</button>
+            <button class="btn secondary" id="vocab-reset">Reset</button>
+          </span>
+        </div>
+        <div class="match-game">
+          <div class="match-col"><h4>Words</h4><div id="vocab-words"></div></div>
+          <div class="match-col"><h4>Definitions</h4><div id="vocab-defs"></div></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<script>
+/* ============ NAV ============ */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-'+btn.dataset.panel).classList.add('active');
+  });
+});
+
+/* ============ EXTRACT TEXT ============ */
+const extractDiv = document.getElementById('extract-text');
+function addPara(text, cls){
+  const p=document.createElement('p');
+  if(cls) p.className=cls;
+  p.textContent=text;
+  extractDiv.appendChild(p);
+}
+addPara("It was cold, that day she first took flight, and the snow lay thick enough to hide a cat in.", 'dropcap');
+addPara("She wore her father's coat. It came down past her knees, and she had rolled the sleeves up, so they hung at her wrist in a great roll of wool. The coat had once been a deep, cocoa-bean brown, but now it was the colour of an elderly shoe. It smelt, very slightly, of horses and woodsmoke.");
+addPara("The wind was fierce that day. It was often windy in winter at the top of the mountain; birds got blown backwards up the cliff edge, reverse-somersaulting through the sky, their wings shedding feathers like confetti. Seagulls blew into the house, sometimes right into her lap as she sat curled up in the corner, wrapped in rugs, reading by the firelight. Suddenly finding that you had an irate seagull as a bookmark was not, Odile thought, ideal, but her grandfather would throw a blanket over them and stomp out into the night with the bird bundled into his arms.");
+addPara("'Always be polite to birds,' he would say. 'They know more than they let on.'");
+addPara("The house was built into the rock of the mountain, and the door was polished stone. Her grandfather had lived on the mountaintop all his life. Odile had lived with him since she was a baby. She had nobody else. In the house, the fire burned all the year round. 'Keep the fire as hot as the human heart,' said her grandfather, his jaw stern. 'Never let it go out.'");
+addPara("That day, she had pulled her father's coat around her, and set out. The wind caught the coat as she walked down the mountain path, billowing it out behind her like a sail. It had no buttons left, so she took a corner of the coat in each fist and held her arms stiff at her side. She began to run, her hair blowing in her eyes and mouth, down the hill.");
+addPara("The wind caught her coat and tossed her upwards. Odile felt the sudden swoop of gravity undone.");
+addPara("It lasted only a second. She screamed, pulling her coat up over her face, and dropped to the ground again, landing on her hands and knees in the snow. Her breathing stopped. Though she had barely fallen two feet, she felt winded, gasping and choking for air.");
+addPara("'I flew,' she whispered. Or had she perhaps just tripped and fallen more extravagantly than usual? She had to be sure.");
+addPara("Odile rubbed some snow into her eyes to make sure she was awake. She pulled a twig from a tree, brushed the frost from it and used it to pin her hair out of her eyes. She put on her gloves.");
+addPara("She stretched out the corners of her coat. She began to run, downhill, her feet kicking up a spray of snow. The coat billowed out behind her. Her breath misted the air in front of her.");
+addPara("And Odile flew.");
+const byline=document.createElement('p');
+byline.className='byline';
+byline.textContent='Katherine Rundell';
+extractDiv.appendChild(byline);
+
+/* ============ AUDIO READ ALOUD ============ */
+const audioEl = document.getElementById('extract-audio');
+const audioBtn = document.getElementById('audio-toggle');
+const audioStatus = document.getElementById('audio-status');
+const audioBackBtn = document.getElementById('audio-back');
+const audioFwdBtn = document.getElementById('audio-fwd');
+const audioSeek = document.getElementById('audio-seek');
+const audioCurrentEl = document.getElementById('audio-current');
+const audioDurationEl = document.getElementById('audio-duration');
+const AUDIO_SRC = "beware-low-flying-girls-audio.mp3";
+
+function formatTime(sec){
+  if(!isFinite(sec) || sec<0) sec=0;
+  const m=Math.floor(sec/60);
+  const s=Math.floor(sec%60);
+  return m+':'+(s<10?'0':'')+s;
+}
+
+if(AUDIO_SRC){
+  audioEl.src = AUDIO_SRC;
+  audioStatus.textContent = "";
+} else {
+  audioBtn.disabled = true;
+  audioBackBtn.disabled = true;
+  audioFwdBtn.disabled = true;
+}
+
+audioBtn.addEventListener('click',()=>{
+  if(audioEl.paused){ audioEl.play(); } else { audioEl.pause(); }
+});
+audioEl.addEventListener('play',()=>{ audioBtn.textContent = "⏸ Pause"; });
+audioEl.addEventListener('pause',()=>{ audioBtn.textContent = "▶ Read aloud"; });
+audioEl.addEventListener('ended',()=>{ audioBtn.textContent = "▶ Read aloud"; });
+audioBackBtn.addEventListener('click',()=>{ audioEl.currentTime = Math.max(0, audioEl.currentTime - 10); });
+audioFwdBtn.addEventListener('click',()=>{ audioEl.currentTime = Math.min(audioEl.duration||0, audioEl.currentTime + 10); });
+audioEl.addEventListener('loadedmetadata',()=>{
+  audioSeek.max = audioEl.duration;
+  audioSeek.disabled = false;
+  audioDurationEl.textContent = formatTime(audioEl.duration);
+});
+let seeking = false;
+audioEl.addEventListener('timeupdate',()=>{
+  if(seeking) return;
+  audioSeek.value = audioEl.currentTime;
+  audioCurrentEl.textContent = formatTime(audioEl.currentTime);
+});
+audioSeek.addEventListener('input',()=>{
+  seeking = true;
+  audioCurrentEl.textContent = formatTime(parseFloat(audioSeek.value));
+});
+audioSeek.addEventListener('change',()=>{
+  audioEl.currentTime = parseFloat(audioSeek.value);
+  seeking = false;
+});
+
+/* ============ STORY ORDER REVEAL ============ */
+document.getElementById('order-reveal').addEventListener('click',()=>{
+  document.getElementById('order-answer').style.display='block';
+});
+
+/* ============ COMPREHENSION DATA ============ */
+const questions = [
+ {id:'Q1',skill:'Explicit information',group:'A',groupLabel:'Explicit information: find the facts',
+  q:"What can you find out about Odile's family from this extract?",
+  circle:"What",underline:"about Odile's family",
+  excerpts:["The house was built into the rock of the mountain, and the door was polished stone. Her grandfather had lived on the mountaintop all his life. Odile had lived with him since she was a baby. She had nobody else."],
+  highlight:["Her grandfather had lived on the mountaintop all his life.","Odile had lived with him since she was a baby.","She had nobody else."],
+  answer:"Odile lives with her grandfather, who has looked after her since she was a baby. Her father is only mentioned through his old coat, and does not seem to be part of her life any more.",
+  explain:"The text tells you this clearly. 'Her grandfather' and 'him' both refer to the same person, so you need to follow the pronouns to see that Odile lives with her grandfather, not her father.",
+  inference:false},
+ {id:'Q2',skill:'Explicit information',group:'A',groupLabel:'Explicit information: find the facts',
+  q:"What is unusual about the setting?",
+  circle:"What",underline:"unusual about the setting",
+  excerpts:["The house was built into the rock of the mountain, and the door was polished stone."],
+  highlight:["built into the rock of the mountain"],
+  answer:"The house is built into the rock of a mountain. This is an unusual place for a house to be.",
+  explain:"This is written clearly in the first sentence of the paragraph.",
+  inference:false},
+ {id:'Q3',skill:'Explicit information',group:'A',groupLabel:'Explicit information: find the facts',
+  q:"What other unusual aspects of the story can you find, apart from the setting?",
+  circle:"What",underline:"other unusual aspects",
+  excerpts:[
+   "The wind caught her coat and tossed her upwards. Odile felt the sudden swoop of gravity undone.",
+   "'I flew,' she whispered. Or had she perhaps just tripped and fallen more extravagantly than usual? She had to be sure.",
+   "She stretched out the corners of her coat. She began to run, downhill, her feet kicking up a spray of snow. The coat billowed out behind her. Her breath misted the air in front of her. And Odile flew."
+  ],
+  highlight:["tossed her upwards","'I flew,' she whispered.","And Odile flew."],
+  answer:"Two other unusual things are that Odile seems to be able to fly, and that her father's old coat seems almost magical.",
+  explain:"Both of these things could not really happen in real life, so they stand out as strange.",
+  inference:false},
+ {id:'Q4',skill:'Story order',group:'A',groupLabel:'Explicit information: find the facts',
+  q:"Write down the last two main points in the extract from 'Beware Low-Flying Girls'.",
+  circle:"Write down",underline:"the last two main points",
+  excerpts:[
+   "The wind caught her coat and tossed her upwards. Odile felt the sudden swoop of gravity undone. It lasted only a second. She screamed, pulling her coat up over her face, and dropped to the ground again, landing on her hands and knees in the snow. Her breathing stopped. Though she had barely fallen two feet, she felt winded, gasping and choking for air.",
+   "She stretched out the corners of her coat. She began to run, downhill, her feet kicking up a spray of snow. The coat billowed out behind her. Her breath misted the air in front of her. And Odile flew."
+  ],
+  highlight:["tossed her upwards","And Odile flew."],
+  answer:"First, the wind catches her coat and she flies for a moment. Then she tries again, and this time she really flies.",
+  explain:"These are the last two things that happen: first a short, wobbly flight, then a second try that works.",
+  inference:false},
+ {id:'Q5',skill:'Implicit information',group:'B',groupLabel:'Implicit information: why did the writer choose this?',
+  q:"Why does the writer start the story by telling you Odile can fly?",
+  circle:"Why",underline:"start the story by telling you Odile can fly",
+  excerpts:["It was cold, that day she first took flight, and the snow lay thick enough to hide a cat in."],
+  highlight:["that day she first took flight"],
+  answer:"It makes the reader curious about the fantasy part of the story, and gives a clue about what is going to happen.",
+  explain:"Telling us this so early makes us want to know more. We keep reading to find out how, and why.",
+  inference:true},
+ {id:'Q6',skill:'Implicit information',group:'B',groupLabel:'Implicit information: why did the writer choose this?',
+  q:"Why does she tell the reader that Odile wears her father's coat? (Think about why the coat might be special.)",
+  circle:"Why",underline:"Odile wears her father's coat",
+  excerpts:["She wore her father's coat. It came down past her knees, and she had rolled the sleeves up, so they hung at her wrist in a great roll of wool. The coat had once been a deep, cocoa-bean brown, but now it was the colour of an elderly shoe. It smelt, very slightly, of horses and woodsmoke."],
+  highlight:["her father's coat"],
+  answer:"It hints that the coat might be what lets Odile fly. It also shows a link between Odile and her father.",
+  explain:"The coat is there both times Odile flies. This hints that it might be more than just a coat.",
+  inference:true},
+ {id:'Q7',skill:'Implicit information',group:'B',groupLabel:'Implicit information: why did the writer choose this?',
+  q:"Why does the writer end this part of the story with Odile flying?",
+  circle:"Why",underline:"end this part of the story with Odile flying",
+  excerpts:["She stretched out the corners of her coat. She began to run, downhill, her feet kicking up a spray of snow. The coat billowed out behind her. Her breath misted the air in front of her. And Odile flew."],
+  highlight:["And Odile flew."],
+  answer:"It proves true what we were told at the start of the extract. It is the most exciting, most unusual moment so far.",
+  explain:"This short sentence feels important because it comes right after two longer paragraphs where Odile isn't sure what just happened.",
+  inference:true}
+];
+
+let curQ = 0;
+let curTab = 'extract';
+
+function highlightExcerpt(text, phrases){
+  let out = text;
+  (phrases||[]).forEach(p=>{ out = out.replace(p, '<mark class="evidence-highlight">'+p+'</mark>'); });
+  return out;
+}
+
+function buildQNav(){
+  const nav = document.getElementById('q-nav');
+  nav.innerHTML='';
+  let lastGroup=null;
+  questions.forEach((item,i)=>{
+    if(item.group!==lastGroup){
+      const lbl=document.createElement('span');
+      lbl.className='q-nav-label';
+      lbl.textContent=item.groupLabel;
+      nav.appendChild(lbl);
+      lastGroup=item.group;
+    }
+    const btn=document.createElement('button');
+    btn.className='q-pill'+(i===curQ?' active':'')+(item.group==='B'?' grp-B':'');
+    btn.textContent=item.id;
+    btn.addEventListener('click',()=>{ curQ=i; curTab='extract'; renderQCard(); });
+    nav.appendChild(btn);
+  });
+}
+
+function excerptBlocks(excerpts, highlightFn){
+  return excerpts.map(e=>'<div class="excerpt-block">'+(highlightFn?highlightFn(e):e)+'</div>').join('<div style="height:10px;"></div>');
+}
+
+function extractView(item){
+  return '<div class="q-sublabel">Question</div><div class="q-box">'+item.q+'</div>'+
+         '<div class="q-divider"></div>'+
+         '<div class="q-sublabel">Extract</div>'+excerptBlocks(item.excerpts);
+}
+
+function answerView(item){
+  const marked = item.q.replace(item.circle, '<span class="circle-word">'+item.circle+'</span>')
+                        .replace(item.underline, '<span class="underline-focus">'+item.underline+'</span>');
+  const highlighted = excerptBlocks(item.excerpts, e=>highlightExcerpt(e, item.highlight));
+  return '<div class="q-sublabel">Unpacking the question</div><div class="q-box">'+marked+'</div>'+
+         '<p style="font-size:0.85rem;color:var(--ink-soft);margin-top:-8px;margin-bottom:14px;">The circled word tells you what kind of answer to give. The underlined words tell you exactly what the question is asking about.</p>'+
+         '<div class="q-sublabel">Annotated extract</div>'+highlighted+
+         '<div class="q-divider"></div>'+
+         (item.inference ? '<span class="tag model-answer" style="display:inline-block;">This question needs your own thinking. Your answer can be worded a bit differently.</span><div style="height:8px;"></div>' : '')+
+         '<div class="q-sublabel">Model answer</div>'+
+         '<div class="model-answer"><p style="margin:0;">'+item.answer+'</p><p class="explain">'+item.explain+'</p></div>';
+}
+
+function renderQCard(){
+  buildQNav();
+  const item=questions[curQ];
+  const isExtract = curTab==='extract';
+  document.getElementById('q-card-wrap').innerHTML =
+    '<div class="q-card">'+
+      '<div class="q-banner'+(item.group==='B'?' grp-B':'')+'">'+
+        '<span>'+item.id+' — Beware Low-Flying Girls</span>'+
+        '<span class="q-badge">'+item.skill+'</span>'+
+      '</div>'+
+      '<div class="q-tabs2">'+
+        '<button class="q-tab2'+(isExtract?' active':'')+'" data-tab="extract">Question &amp; extract</button>'+
+        '<button class="q-tab2'+(!isExtract?' active':'')+'" data-tab="answer">Answer &amp; explanation</button>'+
+      '</div>'+
+      '<div class="q-body">'+(isExtract?extractView(item):answerView(item))+'</div>'+
+    '</div>';
+  document.querySelectorAll('.q-tab2').forEach(btn=>{
+    btn.addEventListener('click',()=>{ curTab=btn.dataset.tab; renderQCard(); });
+  });
+}
+renderQCard();
+
+/* ============ GENERIC MATCH GAME BUILDER ============ */
+const badgePalette=['#5f87a3','#cbae72','#5c7a58','#3f6284'];
+
+function buildMatchGame(pairs, wordsElId, defsElId, scoreElId, resetBtnId, revealBtnId){
+  pairs.forEach((p,i)=>{ p.idx=i+1; p.colour=badgePalette[i%badgePalette.length]; });
+  let matched=0;
+  let selectedWord=null;
+  const shuffledDefs=[...pairs].sort(()=>Math.random()-0.5);
+  const wordsEl=document.getElementById(wordsElId);
+  const defsEl=document.getElementById(defsElId);
+  const scoreEl=document.getElementById(scoreElId);
+
+  function badge(p){ return '<span class="match-badge" style="background:'+p.colour+'">'+p.idx+'</span>'; }
+
+  function render(){
+    wordsEl.innerHTML=''; defsEl.innerHTML='';
+    pairs.forEach(p=>{
+      const d=document.createElement('div');
+      d.className='match-item'+(p.done?' correct':'')+(selectedWord===p.word&&!p.done?' picked':'');
+      d.innerHTML=(p.done?badge(p):'')+'<span>'+p.word+'</span>';
+      d.dataset.word=p.word;
+      if(!p.done){
+        d.addEventListener('click',()=>{ selectedWord = (selectedWord===p.word)?null:p.word; render(); });
+      }
+      wordsEl.appendChild(d);
+    });
+    shuffledDefs.forEach(p=>{
+      const d=document.createElement('div');
+      d.className='match-item'+(p.done?' correct':'');
+      d.innerHTML=(p.done?badge(p):'')+'<span>'+p.def+'</span>';
+      if(!p.done){
+        d.addEventListener('click',()=>{
+          if(!selectedWord)return;
+          const target=pairs.find(x=>x.word===selectedWord);
+          if(target.def===p.def){
+            target.done=true; matched++; selectedWord=null;
+            scoreEl.textContent='Matched: '+matched+' / '+pairs.length;
+            render();
+          } else {
+            d.classList.add('wrong-flash');
+            setTimeout(()=>{d.classList.remove('wrong-flash');selectedWord=null;render();},420);
+          }
+        });
+      }
+      defsEl.appendChild(d);
+    });
+  }
+  render();
+  document.getElementById(resetBtnId).addEventListener('click',()=>{
+    pairs.forEach(p=>p.done=false);
+    matched=0; selectedWord=null;
+    scoreEl.textContent='Matched: 0 / '+pairs.length;
+    render();
+  });
+  if(revealBtnId){
+    document.getElementById(revealBtnId).addEventListener('click',()=>{
+      pairs.forEach(p=>p.done=true);
+      matched=pairs.length; selectedWord=null;
+      scoreEl.textContent='Matched: '+matched+' / '+pairs.length+' (revealed)';
+      render();
+    });
+  }
+}
+
+const vocabPairs=[
+ {word:"fierce",def:"strong and angry"},
+ {word:"confetti",def:"small pieces of coloured paper"},
+ {word:"irate",def:"very angry"},
+ {word:"bundled",def:"roughly gathered up"}
+];
+buildMatchGame(vocabPairs,'vocab-words','vocab-defs','vocab-score','vocab-reset','vocab-reveal');
+
+/* ============ INGREDIENTS & RECIPE SORT ============ */
+const nounData=[
+ {noun:"The main character is often an ordinary person who turns out to have a special skill",type:"Character",why:"A special skill, like Odile being able to fly, is a common feature of adventure heroes."},
+ {noun:"There is often an older relative or guide who helps the main character",type:"Character",why:"An older relative or guide, like Odile's grandfather, often helps the hero."},
+ {noun:"The story often starts somewhere ordinary, before it moves somewhere more exciting or dangerous",type:"Setting",why:"Stories often begin somewhere normal before the adventure takes the character somewhere stranger."},
+ {noun:"The story can move to a wild or unusual place, like a mountain, jungle or castle",type:"Setting",why:"A lonely mountaintop, like Odile's home, is this kind of unusual place."},
+ {noun:"The main character usually has a problem or challenge to work out",type:"Situation",why:"Working out what her new skill means, and what to do about it, is Odile's challenge."},
+ {noun:"The main character has to get past problems along the way",type:"Situation",why:"Adventures usually involve difficulties the character has to get past."},
+ {noun:"The ending is usually happy, and the main character succeeds",type:"Ending",why:"Most adventure stories end with the hero getting what they wanted."},
+ {noun:"By the end, the problem has been solved",type:"Ending",why:"A solved problem is a common way for an adventure story to end."}
+];
+const cats=["Character","Setting","Situation","Ending"];
+const nounTable=document.getElementById('noun-table');
+function renderNounTable(){
+  nounTable.innerHTML='<tr><th>Feature</th><th>Choose a category</th></tr>';
+  nounData.forEach((item,i)=>{
+    const tr=document.createElement('tr');
+    const tdWord=document.createElement('td');
+    tdWord.innerHTML='<span class="noun-word">'+item.noun+'</span>';
+    const tdBtns=document.createElement('td');
+    const row=document.createElement('div');
+    row.className='cat-btn-row';
+    cats.forEach(c=>{
+      const b=document.createElement('button');
+      b.className='cat-btn'+(item.chosen===c?' chosen':'');
+      b.textContent=c;
+      b.addEventListener('click',()=>{ item.chosen=c; item.checked=false; renderNounTable(); });
+      row.appendChild(b);
+    });
+    tdBtns.appendChild(row);
+    if(item.checked){
+      const fb=document.createElement('div');
+      fb.className='noun-feedback';
+      const correct = item.chosen===item.type;
+      fb.style.color = correct? 'var(--ok)':'var(--bad)';
+      fb.textContent = (correct? 'Correct. ' : ('Not quite, this is '+item.type+'. ')) + item.why;
+      tdBtns.appendChild(fb);
+    }
+    tr.appendChild(tdWord); tr.appendChild(tdBtns);
+    nounTable.appendChild(tr);
+  });
+}
+renderNounTable();
+document.getElementById('noun-check').addEventListener('click',()=>{
+  nounData.forEach(i=>i.checked=true);
+  renderNounTable();
+  document.querySelectorAll('.cat-btn-row').forEach((row,i)=>{
+    const item=nounData[i];
+    row.querySelectorAll('.cat-btn').forEach(b=>{
+      if(b.classList.contains('chosen')) b.classList.add(item.chosen===item.type?'right':'wrong');
+    });
+  });
+});
+document.getElementById('noun-reset').addEventListener('click',()=>{
+  nounData.forEach(i=>{i.chosen=null;i.checked=false;});
+  renderNounTable();
+});
+</script>
+</body>
+</html>
